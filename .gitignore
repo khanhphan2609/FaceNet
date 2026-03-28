@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+
+# môi trường ảo
+facenet_env/
+venv/
+*.mp4
+
+# dataset (rất nặng)
+data/
+
+# weights
+weights/
+*.pth
+face_database.pt
+
+# hệ thống
+.DS_Store
+Thumbs.db

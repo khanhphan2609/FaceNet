@@ -1,0 +1,8 @@
+torch
+torchvision
+facenet-pytorch
+opencv-python
+numpy
+pillow
+tqdm
+mediapipe==0.10.9
