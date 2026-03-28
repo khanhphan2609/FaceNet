@@ -3,7 +3,7 @@ __pycache__/
 
 # môi trường ảo
 facenet_env/
-venv/
+.venv/
 *.mp4
 
 # dataset (rất nặng)
@@ -16,4 +16,4 @@ face_database.pt
 
 # hệ thống
 .DS_Store
-Thumbs.db
+Thumbs.db.venv/
