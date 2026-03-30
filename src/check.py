@@ -157,49 +157,64 @@ def recognize(database):
         boxes, _ = mtcnn.detect(img_pil)
 
         if boxes is not None:
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box)
 
-                try:
-                    face = img_pil.crop((x1, y1, x2, y2))
-                    emb_unknown = get_embedding(face)
-                except:
-                    continue
+            # ==========================================
+            # 👉 CHỌN FACE LỚN NHẤT (NGƯỜI GẦN NHẤT)
+            # ==========================================
+            areas = [(box[2] - box[0]) * (box[3] - box[1]) for box in boxes]
+            max_idx = areas.index(max(areas))
+            box = boxes[max_idx]
 
-                best_name = "Unknown"
-                best_score = -1
+            x1, y1, x2, y2 = map(int, box)
 
-                for name, emb_db in database.items():
-                    sim = F.cosine_similarity(emb_unknown, emb_db).item()
+            # Optional: bỏ qua mặt quá nhỏ
+            if (x2 - x1) < 80:
+                cv2.imshow("FaceNet System", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                continue
 
-                    if sim > best_score:
-                        best_score = sim
-                        best_name = name
+            try:
+                face = img_pil.crop((x1, y1, x2, y2))
+                emb_unknown = get_embedding(face)
+            except:
+                continue
 
-                if best_score > SIMILARITY_THRESHOLD:
-                    if best_name in attended:
-                        color = (255, 150, 0)
-                        text = f"{best_name} (Done)"
-                    else:
-                        frame_count[best_name] += 1
-                        count = frame_count[best_name]
+            best_name = "Unknown"
+            best_score = -1
 
-                        color = (0, 255, 255)
-                        text = f"{best_name}: {count}/{VOTE_THRESHOLD}"
+            for name, emb_db in database.items():
+                sim = F.cosine_similarity(emb_unknown, emb_db).item()
 
-                        if count >= VOTE_THRESHOLD:
-                            log_attendance(best_name)
-                            attended.add(best_name)
+                if sim > best_score:
+                    best_score = sim
+                    best_name = name
+
+            if best_score > SIMILARITY_THRESHOLD:
+                if best_name in attended:
+                    color = (255, 150, 0)
+                    text = f"{best_name} (Done)"
                 else:
-                    text = "Unknown"
-                    color = (0, 0, 255)
+                    frame_count[best_name] += 1
+                    count = frame_count[best_name]
 
-                    for k in frame_count:
-                        frame_count[k] = 0
+                    color = (0, 255, 255)
+                    text = f"{best_name}: {count}/{VOTE_THRESHOLD}"
 
-                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-                cv2.putText(frame, text, (x1, y1 - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+                    if count >= VOTE_THRESHOLD:
+                        log_attendance(best_name)
+                        attended.add(best_name)
+            else:
+                text = "Unknown"
+                color = (0, 0, 255)
+
+                for k in frame_count:
+                    frame_count[k] = 0
+
+            # Vẽ duy nhất 1 face
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+            cv2.putText(frame, text, (x1, y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
         cv2.imshow("FaceNet System", frame)
 

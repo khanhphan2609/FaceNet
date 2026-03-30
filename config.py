@@ -24,7 +24,7 @@ WEIGHTS_DIR = {
 # ==========================================
 TRAIN = {
     "batch_size":    16,
-    "epochs":        30,
+    "epochs":        8,
     "learning_rate": 0.0001,
     "margin":        1.0,
 }
@@ -33,7 +33,7 @@ TRAIN = {
 # RECOGNITION
 # ==========================================
 RECOGNITION = {
-    "similarity_threshold": 0.30,
+    "similarity_threshold": 0.6,
     "vote_threshold":       10,
 }
 

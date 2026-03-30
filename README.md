@@ -79,6 +79,9 @@ pip install -r requirements.txt
 ```bash
 python -m src.camera
 ```
+```bash
+python -m utils.video_to_frames
+```
 
 * Chụp ảnh khuôn mặt cho từng người
 * Mỗi người nên có 30–50 ảnh
