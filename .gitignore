@@ -17,3 +17,14 @@ face_database.pt
 # hệ thống
 .DS_Store
 Thumbs.db.venv/
+
+
+
+__pycache__/
+*.pyc
+*.pth
+data/original/
+data/faces/
+weights/
+.git/
+*.log
